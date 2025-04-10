@@ -1,0 +1,21 @@
+*.pyc
+
+# Elastic Beanstalk Files
+
+.elasticbeanstalk/*
+
+!.elasticbeanstalk/*.cfg.yml
+
+!.elasticbeanstalk/*.global.yml
+.project
+*.pyc
+*.pydevproject
+*.settings
+www/static/*
+.idea/*
+venv/*
+venv37/*
+venv-old/*
+
+*.doc
+*.pptx
