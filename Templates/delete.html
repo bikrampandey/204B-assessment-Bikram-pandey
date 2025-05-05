@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Confirmation - EASYCMS</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image:url(static/images/background.jpg);
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .footer {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .back-button {
+            background-color: #f88;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .frosted-glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 100px auto 60px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            margin: 0 10px;
+        }
+        .btn.cancel {
+            background-color: #a7f9c0;
+        }
+        .btn.delete {
+            background-color: #ff6d6d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            margin: 0 10px;
+        }
+        .message {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span>EASYCMS</span>
+        <button class="back-button" onclick="window.location.href='list'">Back to Contacts</button>
+    </div>
+
+    <div class="frosted-glass">
+        <div class="message">
+            Are you sure you want to delete<br><b>{{ contact.name }}</b>?
+        </div>
+        <form id="deleteForm">
+            <input type="hidden" name="contact_id" value="{{ contact.id }}">
+            <button type="button" class="btn cancel" onclick="window.location.href='list'">Cancel</button>
+            <button type="submit" class="btn delete">Delete</button>
+        </form>
+        <p id="message" class="text-center mt-2 text-red-500"></p>
+    </div>
+
+    <div class="footer">
+        © 2025 EASYCMS | All rights reserved
+    </div>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('{{ url_for("delete_contact", contact_id=contact.id) }}', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            const messageElement = document.getElementById('message');
+            
+            if (result.success) {
+                messageElement.classList.remove('text-red-500');
+                messageElement.classList.add('text-green-500');
+                messageElement.innerText = result.message;
+                setTimeout(() => {
+                    window.location.href = result.redirect || '{{ url_for("list") }}';
+                }, 2000);
+            } else {
+                messageElement.classList.remove('text-green-500');
+                messageElement.classList.add('text-red-500');
+                messageElement.innerText = result.message;
+            }
+        });
+    </script>
+</body>
+</html>

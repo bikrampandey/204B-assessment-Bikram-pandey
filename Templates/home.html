@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - EASYCMS</title>
+    <style>
+        body {
+            background-image:url(static/images/background.jpg);
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgb(156, 156, 156);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .footer {
+            background: rgba(0, 0, 0, 0.6);
+            height: 40px;
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            background-color: #f88;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .btn.add-contact {
+            background-color: #32cd32;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+            margin: 60px 0;
+        }
+        .profile-section {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 10px;
+            display: flex;
+            width: 450px;
+        }
+        .profile-img {
+            margin-right: 25px;
+        }
+        .profile-img img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-details input {
+            display: block;
+            width: 220px;
+            margin-bottom: 12px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .action-btn.all-contact {
+            background-color: #90ee90;
+        }
+        .action-btn.change-password {
+            background-color: #87ceeb;
+            color: white;
+        }
+    </style>
+</head>
+<body> 
+       <div class="header">
+        <span>EASYCMS</span>
+        <div class="button-group">
+            <button class="add_contact-btn" onclick="window.location.href='add_contact'">Add Contact</button>
+            <button class="btn" onclick="window.location.href='logout'">Log out</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-img">
+                <img src="{{ user.profile_picture or 'https://via.placeholder.com/120' }}" alt="Profile Image">
+            </div>
+            <div class="profile-details">
+                <input type="text" value="{{ user.full_name }}" readonly>
+                <input type="text" value="{{ user.email }}" readonly>
+                <input type="text" value="{{ user.address or '' }}" readonly>
+                <input type="text" value="{{ user.phone or '' }}" readonly>
+                <div class="buttons">
+                    <button class="action-btn all-contact" onclick="window.location.href='list'">All Contacts</button>
+                    <button class="action-btn change-password" onclick="window.location.href='change_password'">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2025 EASYCMS | All rights reserved
+    </div>
+</body>
+</html>

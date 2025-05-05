@@ -1,0 +1,305 @@
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image:url(static/images/background.jpg);
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+/* Footer */
+.footer {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Buttons */
+.back-button, .btn, .action-btn, .btn-edit, .btn-delete, .cancel-button, .save-button {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+}
+
+.back-button {
+    background-color: #f88;
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.btn {
+    background-color: #a3d9a5;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #8cc391;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.action-btn.all-contact {
+    background-color: #90ee90;
+}
+
+.action-btn.change-password {
+    background-color: #87ceeb;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.btn-delete {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.cancel-button {
+    background-color: #ffa5a5;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.save-button {
+    background-color: #a7f9c0;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.btn.cancel {
+    background-color: #ff9999;
+}
+
+/* Frosted Glass Container */
+.frosted-glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 100px auto 60px;
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+/* Links */
+.links a {
+    color: #8a2be2;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Messages */
+.success-msg, .failure-msg, .message {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.success-msg, .text-green-500 {
+    color: green;
+}
+
+.failure-msg, .text-red-500 {
+    color: red;
+}
+
+/* Page-Specific Styles */
+
+/* Home Page */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 20px;
+    margin: 60px 0;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    width: 450px;
+}
+
+.profile-img {
+    margin-right: 25px;
+}
+
+.profile-img img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-details input {
+    display: block;
+    width: 220px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.button-group.add-contact {
+    background-color: #32cd32;
+}
+
+/* List Page */
+.list-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    margin: 100px auto 60px;
+    padding: 30px;
+    max-width: 1000px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Edit Contact Page */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 30px 40px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-preview {
+    width: 150px;
+    height: 150px;
+    border: 4px solid #42a5f5;
+    border-radius: 4px;
+    background-size: cover;
+}
+
+/* Delete Confirm Page */
+.delete-message {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
