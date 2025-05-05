@@ -113,7 +113,7 @@
         <div class="form-box">
             <h1>SIGN UP</h1>
             <div id="message"></div>
-            <form id="signupForm" method="POST">
+            <form id="signupForm" method="POST" enctype="multipart/form-data">
                 <label for="name">NAME</label>
                 <input type="text" id="id_name" name="name" required>
 
@@ -146,25 +146,42 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#signupForm').on('submit',function(e){
+            $('#signupForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+    
+// Create FormData object
+var formData = new FormData();
+            formData.append('username', $('#id_name').val());
+            formData.append('email', $('#id_email').val());
+            formData.append('password', $('#id_password').val());
+            formData.append('address', $('#id_address').val());
+            formData.append('phone', $('#id_phone').val());
+            formData.append('confirm_password', $('#id_confirm_password').val());
+            
+            // Get file input
+            var fileInput = $('#id_profile_picture')[0].files[0];
+            if (fileInput) {
+                formData.append('profile_picture', fileInput);
+            } else {
+                console.log("No file selected"); // Debug
+            }
+    
                 $.ajax({
-                    data : {
-                        username : $('#id_name').val(),
-                        email : $('#id_email').val(),
-                        password: $('#id_password').val(),
-                        address: $('#id_address').val(),
-                        phone: $('#id_phone').val(),
-                        confirm_password: $('#id_confirm_password').val(),
-                        profile_picture: $('#id_profile_picture').val()
+                    url: '/signup_by_ajax',
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Prevent jQuery from processing FormData
+                    contentType: false, // Let browser set multipart/form-data
+                    success: function(data) {
+                        $('#output-msg').text(data.message).show();
+                        if (data.success) {
+                            window.location.href = '/login-by-ajax';
+                        }
                     },
-                    type : 'POST',
-                    url : '/signup_by_ajax'
-                })
-                .done(function(data){
-                    $('#output-msg').text(data.message).show();
-                    window.location.href = '/login-by-ajax';
+                    error: function(xhr, status, error) {
+                        $('#output-msg').text('Error: ' + xhr.responseJSON.message).show();
+                    }
                 });
-                e.preventDefault();
             });
         });
     </script>

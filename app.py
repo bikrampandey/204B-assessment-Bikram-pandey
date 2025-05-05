@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 import os
 import time
+from datetime import datetime as dt
 import uuid
 from models import db, User, Contact
 
@@ -80,13 +81,19 @@ def signup_by_ajax():
         if password != confirm_password:
             return jsonify({'success': False, 'message': 'Passwords do not match.'})
         
+        # Handle profile picture upload
         profile_picture = request.files.get('profile_picture')
-        profile_picture_path = None
+        print(f"Profile Picture: {profile_picture}")  # Debug
+        print(f"Request Files: {request.files}")  # Debug entire files dict
+        profile_picture_path = None  # Default to None if no file
+        
         if profile_picture and allowed_file(profile_picture.filename):
             filename = secure_filename(profile_picture.filename)
+            dt_now = dt.now().strftime("%Y%m%d%H%M%S%f")
             profile_picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             profile_picture.save(profile_picture_path)
             profile_picture_path = os.path.join('uploads', filename)
+            print(profile_picture_path)
         
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -101,6 +108,7 @@ def signup_by_ajax():
             phone=phone,
             profile_picture=profile_picture_path
         )
+        print(new_user)
         
         try:
             db.session.add(new_user)
