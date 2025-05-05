@@ -54,6 +54,7 @@ def login_by_ajax():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        output_msg = ""
         
         user = User.query.filter_by(email=email).first()
         

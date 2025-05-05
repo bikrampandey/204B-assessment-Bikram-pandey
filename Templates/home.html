@@ -119,12 +119,14 @@
 <body> 
        <div class="header">
         <span>EASYCMS</span>
+        <span class="greeting">Welcome, {{ session['user_name'] }}</span>
         <div class="button-group">
             <button class="add_contact-btn" onclick="window.location.href='add_contact'">Add Contact</button>
             <button class="btn" onclick="window.location.href='logout'">Log out</button>
         </div>
     </div>
 
+    <h2 class="personal-info-title">Personal Information</h2>
     <div class="container">
         <div class="profile-section">
             <div class="profile-img">
