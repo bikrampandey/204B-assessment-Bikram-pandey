@@ -130,7 +130,12 @@
     <div class="container">
         <div class="profile-section">
             <div class="profile-img">
-                <img src="{{ user.profile_picture or 'https://via.placeholder.com/120' }}" alt="Profile Image">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture }}" alt="Profile Image" onerror="console.error('Failed to load image: {{ user.profile_picture }}')">
+                {% else %}
+                    <img src="https://via.placeholder.com/120" alt="No Profile Image">
+                    <p>No profile picture uploaded.</p>
+                {% endif %}
             </div>
             <div class="profile-details">
                 <input type="text" value="{{ user.full_name }}" readonly>

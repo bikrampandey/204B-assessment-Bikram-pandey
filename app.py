@@ -14,16 +14,48 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a strong random key
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
 # Configure file upload settings
-UPLOAD_FOLDER = 'static/uploads'
+PROFILE_PIC_UPLOAD_FOLDER = 'static/profile_pic_uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['PROFILE_PIC_UPLOAD_FOLDER'] = PROFILE_PIC_UPLOAD_FOLDER
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+if not os.path.exists(PROFILE_PIC_UPLOAD_FOLDER):
+    os.makedirs(PROFILE_PIC_UPLOAD_FOLDER)
 
+'''
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+'''
+
+# Function for file type validation
+# Returns true if file to upload is of the type mentioned in ALLOWED_EXTENSIONS setting
+def allowed_file(filename):
+    # if file is user.jpg, it splits it at the '.' into two words -> user, jpg. It returns the second word i.e. jpg, 
+    # converts it to lower case and checks if its in the ALLOWED_EXTENSIONS
+    print("Here??")
+    file_name_split = filename.rsplit('.', 1)
+    print("Here too??")
+    file_extension = file_name_split[1]
+    print(file_extension)
+    if file_extension in ALLOWED_EXTENSIONS:
+        return True
+    else:
+        return False
+    '''
+
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           '''
+
+# function to get the file extension
+def get_file_extension(filename):
+    print("Here??")
+    file_name_split = filename.rsplit('.', 1)
+    print("Here too??")
+    file_extension = file_name_split[1]
+    print(file_extension)
+    return file_extension
 
 # Database configuration
 if 'RDS_DB_NAME' in os.environ:
@@ -34,7 +66,7 @@ if 'RDS_DB_NAME' in os.environ:
             host=os.environ['RDS_HOSTNAME'],
             port=os.environ['RDS_PORT'],
             database=os.environ['RDS_DB_NAME'],
-        )
+        )   
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/contacts_db'
 
@@ -80,24 +112,30 @@ def signup_by_ajax():
         
         if password != confirm_password:
             return jsonify({'success': False, 'message': 'Passwords do not match.'})
-        
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'success': False, 'message': 'Email already in use.'})
+                
         # Handle profile picture upload
         profile_picture = request.files.get('profile_picture')
         print(f"Profile Picture: {profile_picture}")  # Debug
         print(f"Request Files: {request.files}")  # Debug entire files dict
-        profile_picture_path = None  # Default to None if no file
+        profile_pic_file_path = None  # Default to None if no file
         
         if profile_picture and allowed_file(profile_picture.filename):
             filename = secure_filename(profile_picture.filename)
+            print(filename)
             dt_now = dt.now().strftime("%Y%m%d%H%M%S%f")
-            profile_picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            profile_picture.save(profile_picture_path)
-            profile_picture_path = os.path.join('uploads', filename)
-            print(profile_picture_path)
-        
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify({'success': False, 'message': 'Email already in use.'})
+            file_extension = get_file_extension(profile_picture.filename)
+
+            filename_to_save = full_name + "_" + dt_now + "." + file_extension
+            print(filename_to_save)            
+            # Save this file to the folder path
+            profile_picture.save(os.path.join(app.config['PROFILE_PIC_UPLOAD_FOLDER'], filename_to_save))
+            profile_pic_file_path = PROFILE_PIC_UPLOAD_FOLDER + filename_to_save
+            print(profile_pic_file_path)
+
         
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = User(
@@ -106,7 +144,7 @@ def signup_by_ajax():
             password=hashed_password,
             address=address,
             phone=phone,
-            profile_picture=profile_picture_path
+            profile_picture=profile_pic_file_path
         )
         print(new_user)
         
@@ -125,17 +163,24 @@ def home():
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
     user = User.query.get(session['user_id'])
+    print("DID IT RETRIEVE THE USER??")
+    print(user)
     if not user:
         session.clear()
         return redirect(url_for('login_by_ajax'))
+    print(f"Rendering home for user: {user.email}, Profile Picture: {user.profile_picture}")  # Debug
+    if user.profile_picture:
+        print("IS IT HERE??")
+        absolute_path = os.path.join(app.config['PROFILE_PIC_UPLOAD_FOLDER'], os.path.basename(user.profile_picture))
+        print(f"Checking profile picture at: {absolute_path}, Exists: {os.path.exists(absolute_path)}")  # Debug
     return render_template('home.html', user=user)
 
-@app.route('/list')
+@app.route('/all_contact')
 def list():
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
     contacts = Contact.query.filter_by(user_id=session['user_id']).all()
-    return render_template('list.html', contacts=contacts)
+    return render_template('all_contact.html', contacts=contacts)
 
 @app.route('/add_contact', methods=['GET', 'POST'])
 def add_contact():
@@ -260,7 +305,7 @@ def change_password():
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
     
-    return render_template('change_password.html')
+    return render_template(url_for('change_password.html'))
 
 @app.route('/logout')
 def logout():
