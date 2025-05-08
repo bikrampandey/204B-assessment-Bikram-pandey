@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configure file upload settings
 PROFILE_PIC_UPLOAD_FOLDER = 'static/profile_pic_uploads/'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif','jfif'}
 app.config['PROFILE_PIC_UPLOAD_FOLDER'] = PROFILE_PIC_UPLOAD_FOLDER
 
 if not os.path.exists(PROFILE_PIC_UPLOAD_FOLDER):
@@ -233,14 +233,6 @@ def add_contact():
             phone = request.form['phone']
             address = request.form['address']
             email = request.form['email']
-            profile_picture = request.files.get('profile_picture')
-            profile_picture_path = None
-            
-            if profile_picture and allowed_file(profile_picture.filename):
-                filename = secure_filename(profile_picture.filename)
-                profile_picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                profile_picture.save(profile_picture_path)
-                profile_picture_path = os.path.join('uploads', filename)
             
             existing_contact = Contact.query.filter_by(email=email, user_id=session['user_id']).first()
             if existing_contact:
@@ -252,7 +244,6 @@ def add_contact():
                 phone=phone,
                 address=address,
                 email=email,
-                profile_picture=profile_picture_path,
                 user_id=session['user_id']
             )
             

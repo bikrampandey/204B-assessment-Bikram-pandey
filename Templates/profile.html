@@ -163,10 +163,9 @@
         <div class="profile-section">
             <div class="profile-img">
                 {% if user.profile_picture %}
-                    <img src="{{ url_for('static', filename=user.profile_picture.lstrip('static/')) }}" 
-                         alt="Profile Image" 
-                         onerror="console.error('Failed to load image: {{ user.profile_picture }}')">
-                    <p style="color: blue;">Path: {{ user.profile_picture }}</p>
+                <img src="{{ user.profile_picture }}" alt="Profile Image" onerror="console.error('Failed to load image: {{ user.profile_picture }}')"
+                style="width: 180px; height: 180px"
+                class="square-box"/>
                 {% else %}
                     <img src="https://via.placeholder.com/120" alt="No Profile Image">
                     <p>No profile picture uploaded.</p>
