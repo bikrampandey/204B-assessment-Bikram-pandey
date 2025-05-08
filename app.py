@@ -175,8 +175,47 @@ def home():
         print(f"Checking profile picture at: {absolute_path}, Exists: {os.path.exists(absolute_path)}")  # Debug
     return render_template('home.html', user=user)
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login_by_ajax'))
+    user = User.query.get(session['user_id'])
+    if not user:
+        session.clear()
+        return redirect(url_for('login_by_ajax'))
+    
+    if request.method == 'POST':
+        try:
+            # Update user information
+            user.full_name = request.form['full_name']
+            user.email = request.form['email']
+            user.address = request.form['address']
+            user.phone = request.form['phone']
+            
+            # Handle profile picture upload
+            profile_picture = request.files.get('profile_picture')
+            if profile_picture and allowed_file(profile_picture.filename):
+                filename = secure_filename(profile_picture.filename)
+                dt_now = dt.now().strftime("%Y%m%d%H%M%S%f")
+                file_extension = get_file_extension(profile_picture.filename)
+                filename_to_save = f"{user.full_name}_{dt_now}.{file_extension}"
+                profile_picture_path = os.path.join(app.config['PROFILE_PIC_UPLOAD_FOLDER'], filename_to_save)
+                profile_picture.save(profile_picture_path)
+                user.profile_picture = os.path.join('static/profile_pic_Uploads', filename_to_save)
+                print(f"Updated Profile Picture: {user.profile_picture}")  # Debug
+            
+            db.session.commit()
+            session['user_name'] = user.full_name  # Update session name
+            return jsonify({'success': True, 'message': 'Profile updated successfully!', 'redirect': url_for('home')})
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating profile: {str(e)}")  # Debug
+            return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+    
+    return render_template('profile.html', user=user)
+
 @app.route('/all_contact')
-def list():
+def all_contact():
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
     contacts = Contact.query.filter_by(user_id=session['user_id']).all()
@@ -219,7 +258,7 @@ def add_contact():
             
             db.session.add(new_contact)
             db.session.commit()
-            return jsonify({'success': True, 'redirect': url_for('list')})
+            return jsonify({'success': True, 'redirect': url_for('all_contact')})
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
@@ -230,6 +269,7 @@ def add_contact():
 def edit_contact(contact_id):
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
+    
     
     contact = Contact.query.get_or_404(contact_id)
     if contact.user_id != session['user_id']:
@@ -251,7 +291,7 @@ def edit_contact(contact_id):
                 contact.profile_picture = os.path.join('uploads', filename)
             
             db.session.commit()
-            return jsonify({'success': True, 'message': 'Contact updated successfully', 'redirect': url_for('list')})
+            return jsonify({'success': True, 'message': 'Contact updated successfully', 'redirect': url_for('all_contact')})
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
@@ -281,7 +321,7 @@ def delete_contact(contact_id):
     try:
         db.session.delete(contact)
         db.session.commit()
-        return jsonify({'success': True, 'message': 'Contact deleted successfully', 'redirect': url_for('list')})
+        return jsonify({'success': True, 'message': 'Contact deleted successfully', 'redirect': url_for('add_contact')})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})
@@ -300,12 +340,12 @@ def change_password():
                 return jsonify({'success': False, 'message': 'Passwords do not match'})
             user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
             db.session.commit()
-            return jsonify({'success': True, 'message': 'Password changed successfully!', 'redirect': url_for('home')})
+            return jsonify({'success': True, 'message': 'Password changed successfully!', 'redirect': url_for('profile')})
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
     
-    return render_template(url_for('change_password.html'))
+    return render_template ('change_password.html')
 
 @app.route('/logout')
 def logout():

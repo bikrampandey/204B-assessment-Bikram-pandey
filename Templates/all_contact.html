@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Contacts - EASYCMS</title>
+    <title>All Contacts - EASyCMSs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         body {
             margin: 0;
@@ -123,8 +125,8 @@
                     <td>{{ contact.phone }}</td>
                     <td>{{ contact.age }}</td>
                     <td>
-                        <button class="btn-edit" onclick="window.location.href='edit_contact', contact_id=contact.id">Edit</button>
-                        <button class="btn-delete" onclick="window.location.href='delete_confirm', contact_id=contact.id">Delete</button>
+                        <button class="btn-edit" onclick="window.location.href='/edit_contact/{{ contact.id }}'">Edit</button>
+                        <button class="btn-delete" onclick="window.location.href='/delete_confirm/{{ contact.id }}'">Delete</button>
                     </td>
                 </tr>
                 {% else %}
