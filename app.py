@@ -282,14 +282,6 @@ def edit_contact(contact_id):
             contact.address = request.form['address']
             contact.phone = request.form['phone']
             contact.age = int(request.form['age'])
-            
-            profile_picture = request.files.get('profile_picture')
-            if profile_picture and allowed_file(profile_picture.filename):
-                filename = secure_filename(profile_picture.filename)
-                profile_picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                profile_picture.save(profile_picture_path)
-                contact.profile_picture = os.path.join('uploads', filename)
-            
             db.session.commit()
             return jsonify({'success': True, 'message': 'Contact updated successfully', 'redirect': url_for('all_contact')})
         except Exception as e:
@@ -321,7 +313,7 @@ def delete_contact(contact_id):
     try:
         db.session.delete(contact)
         db.session.commit()
-        return jsonify({'success': True, 'message': 'Contact deleted successfully', 'redirect': url_for('add_contact')})
+        return jsonify({'success': True, 'message': 'Contact deleted successfully', 'redirect': url_for('all_contact')})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})

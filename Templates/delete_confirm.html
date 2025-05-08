@@ -97,7 +97,7 @@
 <body>
     <div class="header">
         <span>EASYCMS</span>
-        <button class="back-button" onclick="window.location.href='all_contact'">Back to Contacts</button>
+        <button class="back-button" onclick="window.location.href='/all_contact'">Back to Contacts</button>
     </div>
 
     <div class="frosted-glass">
@@ -106,7 +106,7 @@
         </div>
         <form id="deleteForm">
             <input type="hidden" name="contact_id" value="{{ contact.id }}">
-            <button type="button" class="btn cancel" onclick="window.location.href='all_contact'">Cancel</button>
+            <button type="button" class="btn cancel" onclick="window.location.href='/all_contact'">Cancel</button>
             <button type="submit" class="btn delete">Delete</button>
         </form>
         <p id="message" class="text-center mt-2 text-red-500"></p>
@@ -120,24 +120,32 @@
         document.getElementById('deleteForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            const response = await fetch('{{ url_for("delete_contact", contact_id=contact.id) }}', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            const messageElement = document.getElementById('message');
-            
-            if (result.success) {
-                messageElement.classList.remove('text-red-500');
-                messageElement.classList.add('text-green-500');
-                messageElement.innerText = result.message;
-                setTimeout(() => {
-                    window.location.href = result.redirect || '{{ url_for("all_contactS") }}';
-                }, 2000);
-            } else {
+            try {
+                const response = await fetch('{{ url_for("delete_contact", contact_id=contact.id) }}', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                const messageElement = document.getElementById('message');
+                
+                if (result.success) {
+                    messageElement.classList.remove('text-red-500');
+                    messageElement.classList.add('text-green-500');
+                    messageElement.innerText = result.message;
+                    setTimeout(() => {
+                        window.location.href = result.redirect || '{{ url_for("all_contact") }}';
+                    }, 2000);
+                } else {
+                    messageElement.classList.remove('text-green-500');
+                    messageElement.classList.add('text-red-500');
+                    messageElement.innerText = result.message;
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                const messageElement = document.getElementById('message');
                 messageElement.classList.remove('text-green-500');
                 messageElement.classList.add('text-red-500');
-                messageElement.innerText = result.message;
+                messageElement.innerText = 'An error occurred. Please try again.';
             }
         });
     </script>
