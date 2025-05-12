@@ -328,8 +328,7 @@ def change_password():
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
     
-    return render_template ('change_password.html')
-
+    return render_template('change_password.html')
 @app.route('/logout')
 def logout():
     session.clear()

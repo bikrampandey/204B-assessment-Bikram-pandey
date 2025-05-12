@@ -1,0 +1,93 @@
+
+        body {
+            background-image: url('{{ url_for("static", filename="images/background.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            height: 90px;
+            background-color: rgba(44, 44, 44, 0.2);
+            backdrop-filter: blur(10px);
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .nav-links .login-btn {
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .form-box {
+            width: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-box h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-box label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-box input[type="text"],
+        .form-box input[type="password"],
+        .form-box input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #66ff99;
+            border: none;
+            border-radius: 25px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .login-link a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            height: 60px;
+            background-color: rgba(27, 27, 27, 0.2);
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }

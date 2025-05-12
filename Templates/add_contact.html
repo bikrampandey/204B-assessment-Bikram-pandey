@@ -1,138 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Contact - EASyCMS</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add Contact - EASyCMS</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/style.css">
+        <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-image: url(/static/images/background.jpg);
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 1000;
-        }
-        .footer {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            text-align: center;
-            color: white;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        .back-button {
-            background-color: #f88;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            margin-top: 60px;
-            margin-bottom: 60px;
-            min-height: calc(100vh - 100px); /* Ensure full height minus header/footer */
+            background-image: url('../static/images/background.jpg');
         }
         .form-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 30px 40px;
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            max-width: 500px; /* Limit width for better centering */
+            max-width: 700px;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="number"],
-        input[type="file"] {
-            padding: 10px;
-            width: 100%;
-            border-radius: 6px;
-            border: 1px solid #888;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        label {
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center; /* Center buttons */
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .cancel-button {
-            background-color: #ffa5a5;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .add-button {
-            background-color: #a7f9c0;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .message {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-    </style>
-</head>
+        form
+        {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+        </style>
+    </head>
 <body>
     <div class="header">
         <span>EASYCMS</span>
-        <button class="back-button" onclick="window.location.href='/all_contact'">Back to Contacts</button>
     </div>
+
+    <button class="back-button" onclick="goBack()" aria-label="Go back to previous page">
+        <i class="fas fa-arrow-left"></i>
+    </button>
 
     <div class="main-content">
         <div class="form-container">
@@ -149,7 +49,7 @@
                 <label for="age">Age</label>
                 <input type="number" name="age" placeholder="Age" required>
                 <div class="button-group">
-                    <button type="button" class="cancel-button" onclick="window.location.href='/all_contact'">Cancel</button>
+                    <button type="button" class="cancel-button" onclick="window.location.href='/home'">Cancel</button>
                     <button type="submit" class="add-button">Add Contact</button>
                 </div>
             </form>
@@ -166,6 +66,10 @@
             e.preventDefault();
             const form = e.target;
             const formData = new FormData(form);
+            // Remove any existing message
+            const existingMessage = document.querySelector('.message');
+            if (existingMessage) existingMessage.remove();
+    
             try {
                 const response = await fetch('{{ url_for("add_contact") }}', {
                     method: 'POST',
@@ -174,28 +78,32 @@
                 const result = await response.json();
                 const messageElement = document.createElement('p');
                 messageElement.className = 'message';
-                form.parentNode.appendChild(messageElement);
-
+                // Append to .main-content instead of .form-container
+                document.querySelector('.main-content').appendChild(messageElement);
+    
                 if (result.success) {
-                    messageElement.classList.add('text-green-500');
+                    messageElement.classList.add('message-success');
                     messageElement.innerText = 'Contact added successfully';
                     form.reset();
                     setTimeout(() => {
                         window.location.href = result.redirect || '{{ url_for("all_contact") }}';
                     }, 2000);
                 } else {
-                    messageElement.classList.add('text-red-500');
+                    messageElement.classList.add('message-error');
                     messageElement.innerText = result.message;
                 }
             } catch (error) {
                 console.error('Error submitting form:', error);
                 const messageElement = document.createElement('p');
                 messageElement.className = 'message';
-                messageElement.classList.add('text-red-500');
+                messageElement.classList.add('message-error');
                 messageElement.innerText = 'An error occurred. Please try again.';
-                form.parentNode.appendChild(messageElement);
+                document.querySelector('.main-content').appendChild(messageElement);
             }
         });
+        function goBack() {
+            window.history.back();
+        }
     </script>
 </body>
 </html>

@@ -1,107 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-        body {
-            background-image:url(static/images/background.jpg);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-        .form-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-            color: #000;
-            margin: auto;
-        }
-        .form-box h1 {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-        .form-box label {
-            display: block;
-            text-align: left;
-            margin-bottom: 0.25rem;
-            font-size: 0.875rem;
-        }
-        .form-box input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: none;
-            border-bottom: 1px solid #000;
-            background: transparent;
-            outline: none;
-        }
-        .form-box button {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: #34d399;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        .form-box button:hover {
-            background-color: #2dd4bf;
-        }
-        .form-box a {
-            display: block;
-            margin-top: 1rem;
-            color: #000;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        .form-box a span.signup-btn {
-            color: #ef4444;
-            cursor: pointer;
-            padding: 0.25rem 0.5rem;
-            border-radius: 5px;
-        }
-        .form-box a span.signup-btn:hover {
-            background-color: #fee2e2;
-            text-decoration: none;
-        }
-        .form-box a:hover {
-            text-decoration: underline;
-        }
-        .header {
-            width: 100%;
-            background: rgba(107, 114, 128, 0.8);
-            padding: 1rem;
-            color: #fff;
-            font-size: 1.5rem;
-            text-align: left;
-        }
-        .footer {
-            width: 100%;
-            background: rgba(107, 114, 128, 0.8);
-            padding: 1rem;
-            color: #fff;
-            text-align: center;
-            font-size: 0.875rem;
-            margin-top: auto;
-        }
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log In</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/style.css">
+        <style>
+            body {
+                background-image: url('../static/images/background.jpg');
+            }
+            .header {
+                width: 100%;
+                background: rgba(107, 114, 128, 0.8);
+                padding: 1rem;
+                color: #fff;
+                font-size: 1.5rem;
+                text-align: left;
+            }
+            .footer {
+                width: 100%;
+                background: rgba(107, 114, 128, 0.8);
+                padding: 1rem;
+                color: #fff;
+                text-align: center;
+                font-size: 0.875rem;
+                margin-top: auto;
+            }
+        </style>
+    </head>
 <body>
     <header class="header">EASyCMS</header>
     <div class="content">

@@ -1,104 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Confirmation - EASyCMSs</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-image:url(static/images/background.jpg);
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 1000;
-        }
-        .footer {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            text-align: center;
-            color: white;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        .back-button {
-            background-color: #f88;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .frosted-glass {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            width: 400px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 100px auto 60px;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            margin: 0 10px;
-        }
-        .btn.cancel {
-            background-color: #a7f9c0;
-        }
-        .btn.delete {
-            background-color: #ff6d6d;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            margin: 0 10px;
-        }
-        .message {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Delete Confirmation - EASyCMSs</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/style.css">
+        <style>
+            body {
+                background-image: url('../static/images/background.jpg');
+            }
+            .frosted-glass {
+                width: 400px;
+                margin: 100px auto 60px;
+            }
+            .message {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
 <body>
     <div class="header">
         <span>EASYCMS</span>
-        <button class="back-button" onclick="window.location.href='/all_contact'">Back to Contacts</button>
     </div>
+
+    <button class="back-button" onclick="goBack()" aria-label="Go back to previous page">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
 
     <div class="frosted-glass">
         <div class="message">
@@ -148,6 +80,10 @@
                 messageElement.innerText = 'An error occurred. Please try again.';
             }
         });
+        function goBack() {
+            window.history.back();
+        }
+
     </script>
 </body>
 </html>
