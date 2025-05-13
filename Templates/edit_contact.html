@@ -1,40 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Edit Contact - EASyCMSs</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="/static/edit_contact.css">
-        <style>
-            body {
-                background-image: url('../static/images/background.jpg');
-            }
-            input[type="text"],
-            input[type="email"],
-            input[type="tel"],
-            input[type="number"],
-            input[type="file"] {
-                width: 350px;
-                padding: 10px;
-            
-            border-radius: 6px;
-            border: 1px solid #888;
-            font-size: 14px
-            }
-            form {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-                justify-content: center; /* Already centers horizontally */
-                align-items: center; /* Already centers vertically */
-                place-items: center;
-            }
-            
-        </style>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Contact - EASyCMSs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/edit_contact.css">
+    <style>
+        body {
+            background-image: url('../static/images/background.jpg');
+        }
+    </style>
+</head>
 <body>
     <div class="header">
         <span>EASYCMS</span>
@@ -48,11 +27,20 @@
         <div class="form-container">
             <form id="editContactForm" enctype="multipart/form-data">
                 <h2>Edit Contact</h2>
+                <div class="profile-img">
+                    {% if contact.profile_picture %}
+                        <img src="/{{contact.profile_picture}}" alt="{{ contact.name }}'s Profile Picture"
+                             style="width: 120px; height: 120px" class="squared-box"/>
+                    {% else %}
+                        <img src="https://via.placeholder.com/80" alt="No Profile Picture" style="width: 80px; height: 80px" class="rounded-box">
+                    {% endif %}
+                </div>
                 <input type="text" name="name" placeholder="Name" value="{{ contact.name }}" required>
                 <input type="email" name="email" placeholder="Email" value="{{ contact.email }}" required>
-                <input type="text" name="address" placeholder="Permanent Address" value="{{ contact.address }}">
-                <input type="tel" name="phone" placeholder="Phone Number" value="{{ contact.phone }}">
+                <input type="text" name="address" placeholder="Permanent Address" value="{{ contact.address }}" required>
+                <input type="tel" name="phone" placeholder="Phone Number" value="{{ contact.phone }}" required>
                 <input type="number" name="age" placeholder="Age" value="{{ contact.age }}" required>
+                <input type="file" name="profile_picture" accept="image/*">
                 <div class="button-group">
                     <button type="button" class="cancel-button" onclick="window.location.href='/all_contact'">Cancel</button>
                     <button type="submit" class="save-button">Save Changes</button>
@@ -68,43 +56,42 @@
 
     <script>
         document.getElementById('editContactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const existingMessage = document.querySelector('.message');
-    if (existingMessage) existingMessage.remove();
-    try {
-        const response = await fetch('{{ url_for("edit_contact", contact_id=contact.id) }}', {
-            method: 'POST',
-            body: formData
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const existingMessage = document.querySelector('.message');
+            if (existingMessage) existingMessage.remove();
+            try {
+                const response = await fetch('{{ url_for("edit_contact", contact_id=contact.id) }}', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                const messageElement = document.createElement('p');
+                messageElement.className = 'message';
+                document.querySelector('.main-content').appendChild(messageElement);
+                if (result.success) {
+                    messageElement.classList.add('message-success');
+                    messageElement.innerText = result.message;
+                    setTimeout(() => {
+                        window.location.href = result.redirect || '{{ url_for("all_contact") }}';
+                    }, 2000);
+                } else {
+                    messageElement.classList.add('message-error');
+                    messageElement.innerText = result.message;
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                const messageElement = document.createElement('p');
+                messageElement.className = 'message';
+                messageElement.classList.add('message-error');
+                messageElement.innerText = 'An error occurred. Please try again.';
+                document.querySelector('.main-content').appendChild(messageElement);
+            }
         });
-        const result = await response.json();
-        const messageElement = document.createElement('p');
-        messageElement.className = 'message';
-        document.querySelector('.main-content').appendChild(messageElement);
-        if (result.success) {
-            messageElement.classList.add('message-success');
-            messageElement.innerText = result.message;
-            setTimeout(() => {
-                window.location.href = result.redirect || '{{ url_for("all_contact") }}';
-            }, 2000);
-        } else {
-            messageElement.classList.add('message-error');
-            messageElement.innerText = result.message;
-        }
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        const messageElement = document.createElement('p');
-        messageElement.className = 'message';
-        messageElement.classList.add('message-error');
-        messageElement.innerText = 'An error occurred. Please try again.';
-        document.querySelector('.main-content').appendChild(messageElement);
-    }
-     });
         function goBack() {
             window.history.back();
         }
-
     </script>
 </body>
 </html>

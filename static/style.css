@@ -446,11 +446,11 @@ th {
 
 /* Sign Up Specific Styles */
 .form-box.signup {
-    width: 800px; /* Increased width for a more spacious form */
-    max-width: 90%; /* Ensure responsiveness on smaller screens */
+    width: 800px;
+    max-width: 90%; 
     background-color: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    padding: 40px; /* Keep increased padding for internal space */
+    padding: 40px; 
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -503,4 +503,11 @@ th {
 .login-link a {
     color: #0066cc;
     text-decoration: none;
+}
+
+.container .profile-img img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
 }

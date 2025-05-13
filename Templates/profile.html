@@ -43,6 +43,8 @@
             <div class="profile-img">
                 {% if user.profile_picture %}
                 <img src="{{ user.profile_picture }}" alt="Profile Image" onerror="console.error('Failed to load image: {{ user.profile_picture }}')"
+                style="width: 140px; height: 140px"
+                class="rounded-box"
                 />
                 {% else %}
                     <img src="https://via.placeholder.com/120" alt="No Profile Image">

@@ -66,16 +66,19 @@ body {
 }
 form {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            place-items: center;
 }
 input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="number"],
 input[type="file"] {
+    width: 350px;
     padding: 10px;
-    width: 250px;
     border-radius: 6px;
     border: 1px solid #888;
     font-size: 14px;
@@ -129,4 +132,38 @@ label {
 }
 .back-button:hover {
     background-color: #0056b3;
+}
+.form-container {
+    background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 450px;
+            margin: 0 auto;
+}
+.profile-img img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+.message {
+    text-align: center;
+    font-size: 14px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    width: fit-content;
+    margin: 20px auto 10px;
+}
+.message-success {
+    color: #32cd32;
+}
+.message-error {
+    color: #ff0000;
+}
+.rounded-box {
+    border-radius: 10px;
 }

@@ -20,8 +20,16 @@ PROFILE_PIC_UPLOAD_FOLDER = 'static/profile_pic_uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif','jfif'}
 app.config['PROFILE_PIC_UPLOAD_FOLDER'] = PROFILE_PIC_UPLOAD_FOLDER
 
+CONTACTS_PIC_UPLOADS_FOLDER='static/contacts_pic_uploads/'
+ALLOWED_EXTENSIONS={'png', 'jpg', 'jpeg', 'gif','jfif'}
+app.config['CONTACTS_PIC_UPLOADS_FOLDER'] = CONTACTS_PIC_UPLOADS_FOLDER
+
 if not os.path.exists(PROFILE_PIC_UPLOAD_FOLDER):
     os.makedirs(PROFILE_PIC_UPLOAD_FOLDER)
+
+if not os.path.exists(CONTACTS_PIC_UPLOADS_FOLDER):
+    os.makedirs(CONTACTS_PIC_UPLOADS_FOLDER)
+
 
 '''
 def allowed_file(filename):
@@ -219,6 +227,7 @@ def all_contact():
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
     contacts = Contact.query.filter_by(user_id=session['user_id']).all()
+    
     return render_template('all_contact.html', contacts=contacts)
 
 @app.route('/add_contact', methods=['GET', 'POST'])
@@ -229,27 +238,57 @@ def add_contact():
     if request.method == 'POST':
         try:
             name = request.form['name']
-            age = int(request.form['age'])
+            age = request.form['age']
             phone = request.form['phone']
             address = request.form['address']
             email = request.form['email']
+            profile_picture = request.files.get('profile_picture')
+
+            # Validate required fields
+            if not name or not email or not age:
+                return jsonify({'success': False, 'message': 'Name, email, and age are required'})
+            if not address:
+                return jsonify({'success': False, 'message': 'Address is required'})
+            if not phone:
+                return jsonify({'success': False, 'message': 'Phone number is required'})
             
+            try:
+                age = int(age)
+            except ValueError:
+                return jsonify({'success': False, 'message': 'Age must be a valid number'})
+
+            # Check for existing contact
             existing_contact = Contact.query.filter_by(email=email, user_id=session['user_id']).first()
             if existing_contact:
                 return jsonify({'success': False, 'message': 'Email already exists in contacts!'})
-            
+
+            # Handle profile picture upload
+            profile_picture_path = None
+            if profile_picture and allowed_file(profile_picture.filename):
+                filename = secure_filename(profile_picture.filename)
+                dt_now = dt.now().strftime("%Y%m%d%H%M%S%f")
+                file_extension = get_file_extension(profile_picture.filename)
+                filename_to_save = f"{name}_{dt_now}.{file_extension}"
+                profile_picture_path = os.path.join(app.config['CONTACTS_PIC_UPLOADS_FOLDER'], filename_to_save)
+                profile_picture.save(profile_picture_path)
+                profile_picture = os.path.join('static/contacts_pic_uploads', filename_to_save)
+                print(f"Updated Profile Picture: {profile_picture}")  # Debug
+               
+
+            # Create new contact
             new_contact = Contact(
                 name=name,
                 age=age,
                 phone=phone,
                 address=address,
                 email=email,
-                user_id=session['user_id']
+                user_id=session['user_id'],
+                profile_picture=profile_picture_path
             )
             
             db.session.add(new_contact)
             db.session.commit()
-            return jsonify({'success': True, 'redirect': url_for('all_contact')})
+            return jsonify({'success': True, 'message': 'Contact added successfully', 'redirect': url_for('all_contact')})
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'message': f'Error: {str(e)}'})
@@ -261,10 +300,14 @@ def edit_contact(contact_id):
     if 'user_id' not in session:
         return redirect(url_for('login_by_ajax'))
     
-    
     contact = Contact.query.get_or_404(contact_id)
     if contact.user_id != session['user_id']:
         return jsonify({'success': False, 'message': 'Unauthorized'})
+    
+    if contact.profile_picture:
+        print("IS IT HERE??")
+        save_path = os.path.join(app.config['CONTACTS_PIC_UPLOADS_FOLDER'], os.path.basename(contact.profile_picture))
+        print(f"Checking profile picture at: {save_path}, Exists: {os.path.exists(save_path)}")  # Debug
     
     if request.method == 'POST':
         try:
@@ -272,7 +315,41 @@ def edit_contact(contact_id):
             contact.email = request.form['email']
             contact.address = request.form['address']
             contact.phone = request.form['phone']
-            contact.age = int(request.form['age'])
+            age = request.form['age']
+            profile_picture = request.files.get('profile_picture')
+
+            # Validate required fields
+            if not contact.name or not contact.email or not contact.address or not contact.phone or not age:
+                return jsonify({'success': False, 'message': 'All fields are required'})
+
+            try:
+                contact.age = int(age)
+            except ValueError:
+                return jsonify({'success': False, 'message': 'Age must be a valid number'})
+
+            # Check for duplicate email
+            existing_contact = Contact.query.filter_by(email=contact.email, user_id=session['user_id']).first()
+            if existing_contact and existing_contact.id != contact.id:
+                return jsonify({'success': False, 'message': 'Email already exists in contacts!'})
+
+            # Handle profile picture upload
+            if profile_picture and allowed_file(profile_picture.filename):
+                # Delete old image if exists
+                print("CONTACT PROFILE PICTURE")
+                print(contact.profile_picture)
+                if contact.profile_picture and os.path.exists(os.path.join('static', contact.profile_picture)):
+                    print(f"Deleting old image: {contact.profile_picture}")  # Debug
+                    os.remove(os.path.join('static', contact.profile_picture))
+                filename = secure_filename(profile_picture.filename)
+                dt_now = dt.now().strftime("%Y%m%d%H%M%S%f")
+                file_extension = get_file_extension(profile_picture.filename)
+                filename_to_save = f"{contact.name}_{dt_now}.{file_extension}"
+                save_path = os.path.join(app.config['CONTACTS_PIC_UPLOADS_FOLDER'], filename_to_save)
+                print(f"Saving new contact image to: {save_path}")  # Debug
+                profile_picture.save(save_path)
+                #profile_picture = os.save_path.join('static/contacts_pic_uploads', filename_to_save)
+                contact.profile_picture=save_path
+                print(f"Updated Profile Picture: {profile_picture}")  # Debug
             db.session.commit()
             return jsonify({'success': True, 'message': 'Contact updated successfully', 'redirect': url_for('all_contact')})
         except Exception as e:
@@ -302,6 +379,9 @@ def delete_contact(contact_id):
         return jsonify({'success': False, 'message': 'Unauthorized'})
     
     try:
+        # Delete profile picture file if exists
+        if contact.profile_picture and os.path.exists(os.path.join('static', contact.profile_picture)):
+            os.remove(os.path.join('static', contact.profile_picture))
         db.session.delete(contact)
         db.session.commit()
         return jsonify({'success': True, 'message': 'Contact deleted successfully', 'redirect': url_for('all_contact')})
