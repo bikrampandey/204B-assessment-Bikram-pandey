@@ -42,7 +42,7 @@
         <span>EASYCMS</span>
         <button class="btn" onclick="window.location.href='logout'">Log out</button>
     </div>
-    <button class="back-button" onclick="goBack()" aria-label="Go back to home page">
+    <button class="back-button" onclick="gotohome()" aria-label="Go back to home page">
         <i class="fas fa-arrow-left"></i>
     </button>
 
@@ -95,8 +95,8 @@
         © 2025 EASYCMS | All rights reserved
     </div>
     <script>
-        function goBack() {
-            window.history.back();
+        function gotohome() {
+            window.location.href = '{{ url_for("home") }}';
         }
     </script>
 </body>

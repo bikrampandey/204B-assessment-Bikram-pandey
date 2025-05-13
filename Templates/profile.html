@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <button class="back-button" onclick="goBack()" aria-label="Go back to previous page">
+    <button class="back-button" onclick="gotohome()" aria-label="Go back to home page">
         <i class="fas fa-arrow-left"></i>
     </button>
 
@@ -148,8 +148,8 @@
             });
         });
     
-        function goBack() {
-            window.history.back();
+        function gotohome() {
+            window.location.href = '{{ url_for("home") }}';
         }
     </script>
 </body>

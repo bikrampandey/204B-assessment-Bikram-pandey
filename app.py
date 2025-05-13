@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 import time
 from datetime import datetime as dt
+import threading
 import uuid
 from models import db, User, Contact
 
@@ -30,6 +31,8 @@ if not os.path.exists(PROFILE_PIC_UPLOAD_FOLDER):
 if not os.path.exists(CONTACTS_PIC_UPLOADS_FOLDER):
     os.makedirs(CONTACTS_PIC_UPLOADS_FOLDER)
 
+
+failed_attempts_lock = threading.Lock()
 
 '''
 def allowed_file(filename):
@@ -95,16 +98,49 @@ def login_by_ajax():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        output_msg = ""
+        
+        # Check for lockout
+        with failed_attempts_lock:
+            if email in failed_attempts:
+                lockout_until = failed_attempts[email].get('lockout_until', 0)
+                current_time = time.time()
+                if lockout_until > current_time:
+                    remaining_time = int(lockout_until - current_time)
+                    return jsonify({
+                        'output_msg': f'Too many failed attempts. Please wait {remaining_time} seconds.',
+                        'success': False
+                    })
+                elif lockout_until <= current_time and failed_attempts[email].get('count', 0) >= 3:
+                    # Reset attempts after lockout period expires
+                    failed_attempts[email] = {'count': 0, 'lockout_until': 0}
         
         user = User.query.filter_by(email=email).first()
         
         if user and bcrypt.check_password_hash(user.password, password):
+            with failed_attempts_lock:
+                # Reset failed attempts on successful login
+                if email in failed_attempts:
+                    failed_attempts[email] = {'count': 0, 'lockout_until': 0}
             session['user_id'] = user.id
             session['user_name'] = user.full_name
             return jsonify({'output_msg': f'Welcome back, {user.full_name}!', 'success': True})
         else:
-            return jsonify({'output_msg': 'Invalid email or password. Please try again.', 'success': False})
+            with failed_attempts_lock:
+                # Increment failed attempts
+                if email not in failed_attempts:
+                    failed_attempts[email] = {'count': 0, 'lockout_until': 0}
+                failed_attempts[email]['count'] += 1
+                if failed_attempts[email]['count'] >= 3:
+                    # Set lockout for 3 minutes (180 seconds)
+                    failed_attempts[email]['lockout_until'] = time.time() + 180
+                    return jsonify({
+                        'output_msg': 'Too many failed attempts. Account locked for 3 minutes.',
+                        'success': False
+                    })
+            return jsonify({
+                'output_msg': 'Invalid email or password. Please try again.',
+                'success': False
+            })
         
     return render_template('login.html')
 

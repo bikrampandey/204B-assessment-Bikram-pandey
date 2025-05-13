@@ -27,7 +27,7 @@
         <span>EASYCMS</span>
     </div>
 
-    <button class="back-button" onclick="goBack()" aria-label="Go back to previous page">
+    <button class="back-button" onclick="gotoall_contact()" aria-label="Go back to all_contact page">
         <i class="fas fa-arrow-left"></i>
     </button>
 
@@ -80,8 +80,8 @@
                 messageElement.innerText = 'An error occurred. Please try again.';
             }
         });
-        function goBack() {
-            window.history.back();
+        function gotoall_contact() {
+            window.location.href = '{{ url_for("all_contact") }}';
         }
 
     </script>
