@@ -459,4 +459,4 @@ def test_db():
         return f"Database connection failed: {str(e)}"
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5003)
+    app.run(debug=True)
