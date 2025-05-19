@@ -31,7 +31,6 @@ pycparser==2.22
 pypiwin32==223
 python-dateutil==2.9.0.post0
 pythonnet==3.0.5
-pywin32==310
 PyYAML==6.0.2
 requests==2.32.3
 semantic-version==2.10.0
