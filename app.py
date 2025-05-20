@@ -245,7 +245,7 @@ def profile():
                 filename_to_save = f"{user.full_name}_{dt_now}.{file_extension}"
                 profile_picture_path = os.path.join(app.config['PROFILE_PIC_UPLOAD_FOLDER'], filename_to_save)
                 profile_picture.save(profile_picture_path)
-                user.profile_picture = os.path.join('static/profile_pic_Uploads', filename_to_save)
+                user.profile_picture = os.path.join('static/profile_pic_uploads', filename_to_save)
                 print(f"Updated Profile Picture: {user.profile_picture}")  # Debug
             
             db.session.commit()
